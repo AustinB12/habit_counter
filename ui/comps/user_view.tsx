@@ -1,8 +1,10 @@
 import type { User } from '../App';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-const API_BASE_URL = import.meta.env.PROD
-  ? import.meta.env.API_URL || 'https://habit-counter-api.onrender.com'
+const IS_PROD =
+  typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+const API_BASE_URL = IS_PROD
+  ? 'https://habit-counter-api.onrender.com'
   : 'http://localhost:3001';
 
 interface User_View_Props {
