@@ -11,15 +11,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const server = serve({
   routes: {
     // Serve index.html for all unmatched routes.
-    '/*': isProduction
-      ? async () =>
-          new Response(await Bun.file('./dist/index.html').text(), {
-            headers: { 'Content-Type': 'text/html' },
-          })
-      : async () =>
-          new Response(indexDev.index, {
-            headers: { 'Content-Type': 'text/html' },
-          }),
+    '/*': isProduction ? Bun.file('./dist/index.html') : indexDev,
 
     '/api/hello': {
       async GET(req) {
