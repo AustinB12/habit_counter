@@ -2,6 +2,7 @@ import { serve } from 'bun';
 import indexDev from './index.html';
 import { initializeDatabase, getDatabase } from './db';
 import type { Habit_History, User } from './App';
+import { join } from 'path';
 
 // Initialize database on app load
 initializeDatabase();
@@ -10,9 +11,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const server = serve({
   routes: {
-    // Serve index.html for all unmatched routes.
-    '/*': isProduction ? Bun.file('./dist/index.html') : indexDev,
-
     '/api/hello': {
       async GET(req) {
         return Response.json({
@@ -88,6 +86,9 @@ const server = serve({
         return Response.json(history);
       },
     },
+
+    // Serve static files or index.html for all unmatched routes - MUST BE LAST
+    '/*': isProduction ? Bun.file('./dist/index.html') : indexDev,
   },
 
   development: process.env.NODE_ENV !== 'production' && {
