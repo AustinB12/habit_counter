@@ -1,6 +1,10 @@
 import type { User } from '../App';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+const API_BASE_URL = import.meta.env.PROD
+  ? 'https://habit-counter-api.onrender.com'
+  : 'http://localhost:3001';
+
 interface User_View_Props {
   user_id: number;
 }
@@ -11,7 +15,7 @@ export const User_View = ({ user_id }: User_View_Props) => {
   const { data: me, isLoading: loading } = useQuery<User>({
     queryKey: ['user', user_id],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:3001/users/${user_id}`);
+      const res = await fetch(`${API_BASE_URL}/users/${user_id}`);
       if (!res.ok) throw new Error('Failed to fetch user');
       return res.json();
     },
@@ -19,7 +23,7 @@ export const User_View = ({ user_id }: User_View_Props) => {
 
   const { mutate: updateCount } = useMutation({
     mutationFn: async (count: number) => {
-      const res = await fetch(`http://localhost:3001/users/${user_id}/count`, {
+      const res = await fetch(`${API_BASE_URL}/users/${user_id}/count`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ count }),

@@ -2,6 +2,10 @@ import type { Habit_History } from '../App';
 import { Activity, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
+const API_BASE_URL = import.meta.env.PROD
+  ? 'https://habit-counter-api.onrender.com'
+  : 'http://localhost:3001';
+
 interface HistoryCardProps {
   record: Habit_History;
   hide_desc?: boolean;
@@ -84,7 +88,7 @@ export const History_View = () => {
   const { data: history = [], isLoading: loading } = useQuery<Habit_History[]>({
     queryKey: ['history'],
     queryFn: async () => {
-      const res = await fetch('http://localhost:3001/history');
+      const res = await fetch(`${API_BASE_URL}/history`);
       if (!res.ok) throw new Error('Failed to fetch history');
       return res.json();
     },
