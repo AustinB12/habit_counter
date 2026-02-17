@@ -1,15 +1,25 @@
 import { serve } from 'bun';
-import index from './index.html';
+import indexDev from './index.html';
 import { initializeDatabase, getDatabase } from './db';
 import type { Habit_History, User } from './App';
 
 // Initialize database on app load
 initializeDatabase();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const server = serve({
   routes: {
     // Serve index.html for all unmatched routes.
-    '/*': index,
+    '/*': isProduction
+      ? async () =>
+          new Response(await Bun.file('./dist/index.html').text(), {
+            headers: { 'Content-Type': 'text/html' },
+          })
+      : async () =>
+          new Response(indexDev.index, {
+            headers: { 'Content-Type': 'text/html' },
+          }),
 
     '/api/hello': {
       async GET(req) {
