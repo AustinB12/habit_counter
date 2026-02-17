@@ -2,10 +2,9 @@ import type { Habit_History } from '../App';
 import { Activity, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-const API_BASE_URL =
-  import.meta.env.NODE_ENV === 'production'
-    ? 'https://habit-counter-api.onrender.com'
-    : 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.PROD
+  ? import.meta.env.API_URL || 'https://habit-counter-api.onrender.com'
+  : 'http://localhost:3001';
 
 interface HistoryCardProps {
   record: Habit_History;
