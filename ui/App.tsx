@@ -1,4 +1,4 @@
-import { Activity, useState } from 'react';
+import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Nav } from './comps/nav';
 
@@ -53,15 +53,9 @@ export function App() {
             position: 'relative',
           }}
         >
-          <Activity mode={location === 'austin' ? 'visible' : 'hidden'}>
-            <User_View user_id={1} />
-          </Activity>
-          <Activity mode={location === 'mariana' ? 'visible' : 'hidden'}>
-            <User_View user_id={2} />
-          </Activity>
-          <Activity mode={location === 'history' ? 'visible' : 'hidden'}>
-            <History_View />
-          </Activity>
+          {location === 'austin' && <User_View user_id={1} />}
+          {location === 'mariana' && <User_View user_id={2} />}
+          {location === 'history' && <History_View />}
         </div>
       </div>
     </QueryClientProvider>

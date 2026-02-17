@@ -14,7 +14,11 @@ interface User_View_Props {
 export const User_View = ({ user_id }: User_View_Props) => {
   const queryClient = useQueryClient();
 
-  const { data: me, isLoading: loading } = useQuery<User>({
+  const {
+    data: me,
+    isLoading,
+    error: queryError,
+  } = useQuery<User>({
     queryKey: ['user', user_id],
     queryFn: async () => {
       const res = await fetch(`${API_BASE_URL}/users/${user_id}`);
@@ -23,7 +27,11 @@ export const User_View = ({ user_id }: User_View_Props) => {
     },
   });
 
-  const { mutate: updateCount } = useMutation({
+  const {
+    mutate: updateCount,
+    isPending,
+    error: mutationError,
+  } = useMutation({
     mutationFn: async (count: number) => {
       const res = await fetch(`${API_BASE_URL}/users/${user_id}/count`, {
         method: 'POST',
@@ -38,21 +46,54 @@ export const User_View = ({ user_id }: User_View_Props) => {
     },
   });
 
+  const isDisabled = isLoading || isPending;
+
   return (
     <div className='user-view-container'>
-      <h2>{me?.name ?? 'Loading...'}</h2>
+      {isLoading && (
+        <div className='loadingspinner'>
+          <div id='square1'></div>
+          <div id='square2'></div>
+          <div id='square3'></div>
+          <div id='square4'></div>
+          <div id='square5'></div>
+        </div>
+      )}
+      {!isLoading && !queryError && me?.name && <h2>{me?.name}</h2>}
       <h3>Count: {me?.count ?? 'Loading...'}</h3>
+      {queryError && (
+        <p className='error'>Error loading user: {queryError.message}</p>
+      )}
+      {mutationError && (
+        <p className='error'>Error updating count: {mutationError.message}</p>
+      )}
       <div className='button-container'>
-        <button className='modify-count-button' onClick={() => updateCount(1)}>
+        <button
+          className='modify-count-button'
+          onClick={() => updateCount(1)}
+          disabled={isDisabled}
+        >
           +1
         </button>
-        <button className='modify-count-button' onClick={() => updateCount(-1)}>
+        <button
+          className='modify-count-button'
+          onClick={() => updateCount(-1)}
+          disabled={isDisabled}
+        >
           -1
         </button>
-        <button className='modify-count-button' onClick={() => updateCount(5)}>
+        <button
+          className='modify-count-button'
+          onClick={() => updateCount(5)}
+          disabled={isDisabled}
+        >
           +5
         </button>
-        <button className='modify-count-button' onClick={() => updateCount(-5)}>
+        <button
+          className='modify-count-button'
+          onClick={() => updateCount(-5)}
+          disabled={isDisabled}
+        >
           -5
         </button>
       </div>

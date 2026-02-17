@@ -1,5 +1,5 @@
 import type { Habit_History } from '../App';
-import { Activity, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 const IS_PROD =
@@ -67,7 +67,7 @@ const HistoryCard = ({ record, hide_desc = true }: HistoryCardProps) => {
           <span style={{ fontWeight: 'bold' }}>{record.running_total}</span>
         </div>
       </div>
-      <Activity mode={hide_desc ? 'hidden' : 'visible'}>
+      {!hide_desc && (
         <div
           style={{
             display: 'flex',
@@ -78,7 +78,7 @@ const HistoryCard = ({ record, hide_desc = true }: HistoryCardProps) => {
           <span style={{ fontWeight: 'bold' }}>Description:</span>
           <span>{record.description}</span>
         </div>
-      </Activity>
+      )}
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span>{new Date(record.created_at).toLocaleString()}</span>
       </div>
@@ -87,7 +87,11 @@ const HistoryCard = ({ record, hide_desc = true }: HistoryCardProps) => {
 };
 
 export const History_View = () => {
-  const { data: history = [], isLoading: loading } = useQuery<Habit_History[]>({
+  const {
+    data: history = [],
+    isLoading: loading,
+    error,
+  } = useQuery<Habit_History[]>({
     queryKey: ['history'],
     queryFn: async () => {
       const res = await fetch(`${API_BASE_URL}/history`);
@@ -95,7 +99,7 @@ export const History_View = () => {
       return res.json();
     },
   });
-  const [hide_desc, setHideDesc] = useState(true);
+  const [hide_desc, setHideDesc] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -124,6 +128,7 @@ export const History_View = () => {
       >
         Habit History
       </h1>
+      {error && <p style={{ color: '#ef4444' }}>Error: {error.message}</p>}
       {loading ? (
         <p>Loading...</p>
       ) : isMobile ? (
