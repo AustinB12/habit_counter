@@ -5,6 +5,7 @@ import { User_View } from './comps/user_view';
 import { History_View } from './comps/hist_view';
 
 import './App.css';
+import Bg from './comps/background';
 const queryClient = new QueryClient();
 
 export interface User {
@@ -30,8 +31,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <div
         style={{
-          maxWidth: '80rem',
           marginLeft: 'auto',
+          width: '100vw',
           marginRight: 'auto',
           padding: 0,
           textAlign: 'center',
@@ -39,6 +40,7 @@ function App() {
           zIndex: 10,
         }}
       >
+        <Bg />
         <Nav current_location={location} set_location={setLocation} />
         <div
           id='main-content'
@@ -51,9 +53,46 @@ function App() {
             position: 'relative',
           }}
         >
-          {location === 'austin' && <User_View user_id={1} />}
-          {location === 'mariana' && <User_View user_id={2} />}
-          {location === 'history' && <History_View />}
+          <div
+            style={{
+              height: '100dvh',
+              position: 'absolute',
+              inset: 0,
+              opacity: location === 'austin' ? 1 : 0,
+              transform:
+                location === 'austin' ? 'translateX(0)' : 'translateX(-60px)',
+              transition: 'opacity 300ms ease, transform 300ms ease',
+              pointerEvents: location === 'austin' ? 'auto' : 'none',
+            }}
+          >
+            <User_View user_id={1} />
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: location === 'mariana' ? 1 : 0,
+              transform:
+                location === 'mariana' ? 'translateX(0)' : 'translateX(-60px)',
+              transition: 'opacity 300ms ease, transform 300ms ease',
+              pointerEvents: location === 'mariana' ? 'auto' : 'none',
+            }}
+          >
+            <User_View user_id={2} />
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: location === 'history' ? 1 : 0,
+              transform:
+                location === 'history' ? 'translateX(0)' : 'translateX(-60px)',
+              transition: 'opacity 300ms ease, transform 300ms ease',
+              pointerEvents: location === 'history' ? 'auto' : 'none',
+            }}
+          >
+            <History_View />
+          </div>
         </div>
       </div>
     </QueryClientProvider>

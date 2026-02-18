@@ -1,6 +1,6 @@
 import type { Habit_History } from '../App';
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const IS_PROD = import.meta.env.PROD;
 const API_BASE_URL = IS_PROD
@@ -86,6 +86,7 @@ const HistoryCard = ({ record, hide_desc = true }: HistoryCardProps) => {
 };
 
 export const History_View = () => {
+  const queryClient = useQueryClient();
   const {
     data: history = [],
     isLoading: loading,
@@ -98,7 +99,19 @@ export const History_View = () => {
       return res.json();
     },
   });
-  const [hide_desc, setHideDesc] = useState(false);
+
+  const { mutate: clearHistory, isPending: isClearing } = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`${API_BASE_URL}/history`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to clear history');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['history'] });
+    },
+  });
+
+  const [hide_desc, setHideDesc] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -124,11 +137,21 @@ export const History_View = () => {
       }}
     >
       <h1
-        style={{ fontWeight: 'bold', fontSize: '1.5rem', marginBottom: '1rem' }}
+        style={{
+          fontWeight: 'bold',
+          fontSize: '1.5rem',
+          marginBottom: '1rem',
+          color: 'white',
+        }}
       >
         Habit History
       </h1>
-      <History_Header hide_desc={hide_desc} set_hide_desc={setHideDesc} />
+      <History_Header
+        hide_desc={hide_desc}
+        set_hide_desc={setHideDesc}
+        on_clear={clearHistory}
+        is_clearing={isClearing}
+      />
       {error && <p style={{ color: '#ef4444' }}>Error: {error.message}</p>}
       {loading ? (
         <p>Loading...</p>
@@ -231,10 +254,24 @@ export const History_View = () => {
 const History_Header = ({
   hide_desc,
   set_hide_desc,
+  on_clear,
+  is_clearing,
 }: {
   hide_desc: boolean;
   set_hide_desc: React.Dispatch<React.SetStateAction<boolean>>;
+  on_clear: () => void;
+  is_clearing: boolean;
 }) => {
+  const handleClear = () => {
+    if (
+      window.confirm(
+        'Are you sure you want to delete all history records? This action cannot be undone.',
+      )
+    ) {
+      on_clear();
+    }
+  };
+
   return (
     <div className='history-header'>
       <input type='checkbox' id='checkbox' />
@@ -247,6 +284,13 @@ const History_Header = ({
           onClick={() => set_hide_desc(!hide_desc)}
         >
           {hide_desc ? 'Show' : 'Hide'} Description
+        </button>
+        <button
+          className='menu-button'
+          onClick={handleClear}
+          disabled={is_clearing}
+        >
+          {is_clearing ? 'Clearing...' : 'Clear'}
         </button>
       </label>
     </div>

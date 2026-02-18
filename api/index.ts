@@ -108,6 +108,11 @@ app.get('/history', (req: Request, res: Response) => {
   res.json(history);
 });
 
+app.delete('/history', (req: Request, res: Response) => {
+  db.run('DELETE FROM habit_history');
+  res.json({ message: 'All history deleted' });
+});
+
 // Export db for use in other modules
 export { db };
 

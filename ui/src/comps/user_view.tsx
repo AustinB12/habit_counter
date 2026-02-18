@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { User } from '../App';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -13,6 +14,21 @@ interface User_View_Props {
 
 export const User_View = ({ user_id }: User_View_Props) => {
   const queryClient = useQueryClient();
+  const [isMobile, setIsMobile] = useState(false);
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMobile(mediaQuery.matches);
+
+    const handleResize = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleResize);
+    return () => mediaQuery.removeEventListener('change', handleResize);
+  }, []);
 
   const {
     data: me,
@@ -36,7 +52,7 @@ export const User_View = ({ user_id }: User_View_Props) => {
       const res = await fetch(`${API_BASE_URL}/users/${user_id}/count`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count }),
+        body: JSON.stringify({ count, description }),
       });
       if (!res.ok) throw new Error('Failed to update count');
       return res.json();
@@ -59,8 +75,14 @@ export const User_View = ({ user_id }: User_View_Props) => {
           <div id='square5'></div>
         </div>
       )}
-      {!isLoading && !queryError && me?.name && <h2>{me?.name}</h2>}
-      <h3>Count: {me?.count ?? 'Loading...'}</h3>
+      {!isLoading && !queryError && me?.name && (
+        <h2 style={{ color: 'white', fontWeight: 'bold', fontSize: '2rem' }}>
+          {me?.name}
+        </h2>
+      )}
+      <h3 style={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem' }}>
+        Count: {me?.count ?? 'Loading...'}
+      </h3>
       {queryError && (
         <p className='error'>Error loading user: {queryError.message}</p>
       )}
@@ -96,7 +118,32 @@ export const User_View = ({ user_id }: User_View_Props) => {
         >
           -5
         </button>
+        <button
+          className='modify-count-button'
+          onClick={() => updateCount(10)}
+          disabled={isDisabled}
+        >
+          +10
+        </button>
+        <button
+          className='modify-count-button'
+          onClick={() => updateCount(-10)}
+          disabled={isDisabled}
+        >
+          -10
+        </button>
       </div>
+      <section className='description-container' style={{ margin: '1rem 0' }}>
+        <textarea
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
+          placeholder='Description...'
+          id='story'
+          name='story'
+          rows={5}
+          cols={isMobile ? 40 : 65}
+        ></textarea>
+      </section>
     </div>
   );
 };
