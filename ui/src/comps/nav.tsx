@@ -29,7 +29,7 @@ export const Nav = ({ current_location, set_location }: Nav_Props) => {
         style={buttonStyle(current_location === 'history')}
         onClick={() => set_location('history')}
       >
-        X
+        H
       </button>
     </div>
   );

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Nav } from './comps/nav';
-
-import './index.css';
 import { User_View } from './comps/user_view';
 import { History_View } from './comps/hist_view';
 
+import './App.css';
 const queryClient = new QueryClient();
 
 export interface User {
@@ -25,8 +24,7 @@ export interface Habit_History {
 }
 
 type Location = 'austin' | 'mariana' | 'history';
-
-export function App() {
+function App() {
   const [location, setLocation] = useState<Location>('austin');
   return (
     <QueryClientProvider client={queryClient}>
@@ -61,3 +59,5 @@ export function App() {
     </QueryClientProvider>
   );
 }
+
+export default App;

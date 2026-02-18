@@ -2,10 +2,9 @@ import type { Habit_History } from '../App';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-const IS_PROD =
-  typeof window !== 'undefined' && window.location.hostname !== 'localhost';
+const IS_PROD = import.meta.env.PROD;
 const API_BASE_URL = IS_PROD
-  ? 'https://habit-counter-api.onrender.com'
+  ? import.meta.env.API_URL || 'https://habit-counter-api.onrender.com'
   : 'http://localhost:3001';
 
 interface HistoryCardProps {
@@ -104,6 +103,7 @@ export const History_View = () => {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 768px)');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(mediaQuery.matches);
 
     const handleResize = (e: MediaQueryListEvent) => {
@@ -128,13 +128,18 @@ export const History_View = () => {
       >
         Habit History
       </h1>
+      <History_Header hide_desc={hide_desc} set_hide_desc={setHideDesc} />
       {error && <p style={{ color: '#ef4444' }}>Error: {error.message}</p>}
       {loading ? (
         <p>Loading...</p>
       ) : isMobile ? (
         <div>
           {history.map((record) => (
-            <HistoryCard key={record.id} record={record} />
+            <HistoryCard
+              key={record.id}
+              record={record}
+              hide_desc={hide_desc}
+            />
           ))}
         </div>
       ) : (
@@ -161,9 +166,11 @@ export const History_View = () => {
                 <th style={{ padding: '0.75rem', textAlign: 'center' }}>
                   Running Total
                 </th>
-                <th style={{ padding: '0.75rem', textAlign: 'center' }}>
-                  Description
-                </th>
+                {!hide_desc && (
+                  <th style={{ padding: '0.75rem', textAlign: 'center' }}>
+                    Description
+                  </th>
+                )}
                 <th style={{ padding: '0.75rem', textAlign: 'center' }}>
                   Created At
                 </th>
@@ -199,7 +206,9 @@ export const History_View = () => {
                   <td style={{ padding: '0.75rem', fontWeight: 'bold' }}>
                     {record.running_total}
                   </td>
-                  <td style={{ padding: '0.75rem' }}>{record.description}</td>
+                  {!hide_desc && (
+                    <td style={{ padding: '0.75rem' }}>{record.description}</td>
+                  )}
                   <td
                     style={{
                       padding: '0.75rem',
@@ -215,6 +224,31 @@ export const History_View = () => {
           </table>
         </div>
       )}
+    </div>
+  );
+};
+
+const History_Header = ({
+  hide_desc,
+  set_hide_desc,
+}: {
+  hide_desc: boolean;
+  set_hide_desc: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <div className='history-header'>
+      <input type='checkbox' id='checkbox' />
+      <label htmlFor='checkbox' className='toggle'>
+        <div className='bars' id='bar1'></div>
+        <div className='bars' id='bar2'></div>
+        <div className='bars' id='bar3'></div>
+        <button
+          className='menu-button'
+          onClick={() => set_hide_desc(!hide_desc)}
+        >
+          {hide_desc ? 'Show' : 'Hide'} Description
+        </button>
+      </label>
     </div>
   );
 };
