@@ -113,7 +113,6 @@ button:focus-visible {
   transform: translateX(-50%);
   z-index: 50;
   border-radius: 12rem;
-  corner-shape: squircle;
   background-color: #ffffff20;
   backdrop-filter: blur(10px);
 
@@ -124,10 +123,13 @@ button:focus-visible {
   align-items: center;
 
   width: 35vw;
+  max-height: 3rem;
+  overflow: clip;
 }
 
 .bot-nav-cont button:hover {
   cursor: pointer;
+  background-color: #f4d5ff30;
 }
 
 @media screen and (max-width: 640px) {
@@ -138,7 +140,6 @@ button:focus-visible {
     transform: translateX(-50%);
     z-index: 50;
     border-radius: 12rem;
-    corner-shape: squircle;
     background-color: #ffffff20;
     backdrop-filter: blur(10px);
 
@@ -201,6 +202,25 @@ button:focus-visible {
   box-sizing: border-box;
   color: white;
 }
+
+.bot-nav-cont button {
+  color: inherit;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  font-weight: normal;
+  height: 10rem;
+}
+
+.bot-nav-cont button.active {
+  font-weight: bold;
+  background-color: #ffffff30;
+}
+
 /* From Uiverse.io by Nawsome */ 
 .loadingspinner {
   --square: 26px;

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { User } from '../App';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import '../fonts/fonts.css';
 const IS_PROD =
   typeof window !== 'undefined' && window.location.hostname !== 'localhost';
 const API_BASE_URL = IS_PROD
@@ -76,11 +77,26 @@ export const User_View = ({ user_id }: User_View_Props) => {
         </div>
       )}
       {!isLoading && !queryError && me?.name && (
-        <h2 style={{ color: 'white', fontWeight: 'bold', fontSize: '2rem' }}>
+        <h2
+          style={{
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: 'calc(4rem + 5vw)',
+            fontFamily: 'Workbench',
+            lineHeight: 'normal',
+          }}
+        >
           {me?.name}
         </h2>
       )}
-      <h3 style={{ color: 'white', fontWeight: 'bold', fontSize: '1.5rem' }}>
+      <h3
+        style={{
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: 'calc(1.5rem + 1vw)',
+          fontFamily: 'Workbench',
+        }}
+      >
         Count: {me?.count ?? 'Loading...'}
       </h3>
       {queryError && (

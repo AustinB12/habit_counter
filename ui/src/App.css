@@ -66,7 +66,7 @@
   justify-content: center;
   gap: 10px;
   transition-duration: .3s;
-  scale: 0.5;
+  scale: 0.8;
 
   margin-right: 0.5rem;
 }
@@ -85,6 +85,7 @@
   right: 1rem;
   width: max-content;
   transition: opacity 0.3s ease-in-out, display 0.3s ease-in-out;
+  font-size: 2rem;
 }
 
 
@@ -102,7 +103,7 @@
 .history-header #checkbox:checked + .toggle .menu-button:nth-child(2n+1) {
   display: block;
   position: absolute;
-  top: 105px;
+  top: 155px;
 }
 
 .history-header #checkbox:checked + .toggle .bars {
@@ -126,4 +127,19 @@
   transform: rotate(-45deg);
   transition-duration: .3s;
   transform-origin: left center;
+}
+
+#tumbleweed {
+  animation: tumbleweed 6s linear infinite;
+  animation-delay: 2s;
+  transform-origin: 59% 83%;
+}
+
+@keyframes tumbleweed {
+  0% {
+    transform: translate(-550px, 0) rotate(0deg);
+  }
+  40%, 100% {
+    transform: translate(350px, 0) rotate(460deg);
+  }
 }

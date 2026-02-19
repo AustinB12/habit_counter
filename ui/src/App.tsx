@@ -5,6 +5,7 @@ import { User_View } from './comps/user_view';
 import { History_View } from './comps/hist_view';
 
 import './App.css';
+import './fonts/fonts.css';
 import Bg from './comps/background';
 const queryClient = new QueryClient();
 
