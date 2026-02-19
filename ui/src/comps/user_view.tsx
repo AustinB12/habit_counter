@@ -81,7 +81,7 @@ export const User_View = ({ user_id }: User_View_Props) => {
           style={{
             color: 'white',
             fontWeight: 'bold',
-            fontSize: 'calc(4rem + 5vw)',
+            fontSize: 'calc(3rem + 5vw)',
             fontFamily: 'Workbench',
             lineHeight: 'normal',
           }}

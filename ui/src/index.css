@@ -214,6 +214,7 @@ button:focus-visible {
   background-color: transparent;
   font-weight: normal;
   height: 10rem;
+  outline: none;
 }
 
 .bot-nav-cont button.active {

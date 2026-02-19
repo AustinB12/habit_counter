@@ -139,9 +139,11 @@ export const History_View = () => {
       <h1
         style={{
           fontWeight: 'bold',
-          fontSize: '1.5rem',
-          marginBottom: '1rem',
+          margin: '1.2rem 0',
           color: 'white',
+          fontSize: 'calc(2.5rem + 3vw)',
+          fontFamily: 'Workbench',
+          lineHeight: 'normal',
         }}
       >
         Habit History
