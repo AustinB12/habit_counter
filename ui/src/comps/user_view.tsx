@@ -60,6 +60,7 @@ export const User_View = ({ user_id }: User_View_Props) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user', user_id] });
+      queryClient.invalidateQueries({ queryKey: ['history'] });
     },
   });
 

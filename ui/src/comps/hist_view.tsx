@@ -181,6 +181,7 @@ export const History_View = () => {
                 width: '100%',
                 borderCollapse: 'collapse',
                 minWidth: '600px',
+                backgroundColor: '#00000040',
               }}
             >
               <thead>
@@ -215,7 +216,7 @@ export const History_View = () => {
                     style={{ borderBottom: '1px solid #e5e7eb' }}
                   >
                     <td style={{ padding: '0.75rem' }}>
-                      {record.user_id === 1 ? (
+                      {record.user_id === 2 ? (
                         <span style={{ fontWeight: 'bold', color: '#3b82f6' }}>
                           Austin
                         </span>

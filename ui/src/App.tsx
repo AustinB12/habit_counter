@@ -66,7 +66,7 @@ function App() {
               pointerEvents: location === 'austin' ? 'auto' : 'none',
             }}
           >
-            <User_View user_id={1} />
+            <User_View user_id={2} />
           </div>
           <div
             style={{
@@ -79,7 +79,7 @@ function App() {
               pointerEvents: location === 'mariana' ? 'auto' : 'none',
             }}
           >
-            <User_View user_id={2} />
+            <User_View user_id={1} />
           </div>
           <div
             style={{

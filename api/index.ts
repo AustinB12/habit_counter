@@ -7,11 +7,23 @@ const PORT = process.env.PORT || 3001;
 // Initialize SQLite database
 const db = new Database('habits.db');
 
+// Enable foreign keys
+db.run('PRAGMA foreign_keys = ON;');
+
+db.run(`
+  PRAGMA journal_mode = WAL;          -- Write-Ahead Logging for better concurrency
+  PRAGMA synchronous = NORMAL;        -- Balance between safety and performance
+  PRAGMA cache_size = 10000;          -- 10MB cache (10000 * 1KB pages)
+  PRAGMA temp_store = MEMORY;         -- Store temporary tables in memory
+  PRAGMA mmap_size = 268435456;       -- 256MB memory-mapped I/O
+  PRAGMA optimize;                    -- Analyze and optimize query planner
+`);
+
 db.run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     count INTEGER DEFAULT 0,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'))
   )`);
 
 db.run(`CREATE TABLE IF NOT EXISTS habit_history (
@@ -20,7 +32,7 @@ db.run(`CREATE TABLE IF NOT EXISTS habit_history (
     count_added INTEGER DEFAULT 0,
     running_total INTEGER DEFAULT 0,
     description TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    created_at TEXT DEFAULT(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime')),
     FOREIGN KEY (user_id) REFERENCES users(id)
   )`);
 
